@@ -1,3 +1,6 @@
-# LabAffinity
+# 商品详情页自定义View
+1、支持ScrollView+Webview 
+2、支持scollView+viewpager(内不可以是listview或者webbiew)
+3、支持支持ScrollView+listview
+等等
 
-主要是做一些测试用，不同的功能测试放在不同的分支，独立，不同的测试也要维护不同readme
