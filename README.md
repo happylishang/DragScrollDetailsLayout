@@ -5,4 +5,4 @@
 
 等等
 
-<img src="../video/scrollview+viewpager.gif"></img>
+<img src="https://github.com/happylishang/DragScrollDetailsLayout/blob/master/video/scrollview%2Bviewpager.gif" ></img>
