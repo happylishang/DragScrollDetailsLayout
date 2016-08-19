@@ -239,7 +239,9 @@ public class DragScrollDetailsLayout extends LinearLayout {
         postInvalidate();
     }
 
-
+    /***
+     * speed is preferable
+     */
     private boolean needFlingToToggleView() {
         mVelocityTracker.computeCurrentVelocity(1000, mMaxFlingVelocity);
         if (mCurrentViewIndex == CurrentTargetIndex.UPSTAIRS) {
