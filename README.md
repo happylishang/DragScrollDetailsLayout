@@ -5,4 +5,4 @@
 
 等等
 
-<video src="../scrollview+viewpager.mp4"></video>
+<iframe height=498 width=510 src="https://github.com/happylishang/DragScrollDetailsLayout/blob/master/video/scrollview%2Bviewpager.mp4">
