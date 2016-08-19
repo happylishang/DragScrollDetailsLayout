@@ -7,27 +7,35 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.TextView;
 
 import com.snail.labaffinity.R;
 import com.snail.labaffinity.adapter.SlideFragmentPagerAdapter;
 import com.snail.labaffinity.service.BackGroundService;
+import com.snail.labaffinity.view.DragScrollDetailsLayout;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
 
 public class ViewPagerlidingLayoutActivity
         extends AppCompatActivity {
-
+    @BindView(R.id.viewpager)
     ViewPager viewPager;
+    @BindView(R.id.drag_content)
+    DragScrollDetailsLayout mDragScrollDetailsLayout;
+    @BindView(R.id.flag_tips)
+    TextView mTextView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_fragment_viewpager_sliding);
-
+        ButterKnife.bind(this);
         Intent intent = new Intent(ViewPagerlidingLayoutActivity.this, BackGroundService.class);
         startService(intent);
 
         final TabLayout tabLayout = (TabLayout) findViewById(R.id.tablayout);
         tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
-        viewPager = (ViewPager) findViewById(R.id.viewpager);
         viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
@@ -45,9 +53,18 @@ public class ViewPagerlidingLayoutActivity
 
             }
         });
-
         viewPager.setAdapter(new SlideFragmentPagerAdapter(getSupportFragmentManager()));
         tabLayout.setupWithViewPager(viewPager);
+        mDragScrollDetailsLayout.setOnSlideDetailsListener(new DragScrollDetailsLayout.OnSlideFinishListener() {
+            @Override
+            public void onStatueChanged(DragScrollDetailsLayout.CurrentTargetIndex status) {
+                if (status == DragScrollDetailsLayout.CurrentTargetIndex.UPSTAIRS)
+                    mTextView.setText("pull up to show more");
+                else
+                    mTextView.setText("pull down to top");
+
+            }
+        });
     }
 
     @Override

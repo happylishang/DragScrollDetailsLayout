@@ -2,7 +2,6 @@ package com.snail.labaffinity.view;
 
 import android.content.Context;
 import android.content.res.TypedArray;
-import android.support.v4.view.VelocityTrackerCompat;
 import android.support.v4.view.ViewCompat;
 import android.support.v4.view.ViewPager;
 import android.util.AttributeSet;
@@ -26,7 +25,7 @@ import com.snail.labaffinity.adapter.SlideFragmentPagerAdapter;
 public class DragScrollDetailsLayout extends LinearLayout {
 
 
-    public interface OnSlideDetailsListener {
+    public interface OnSlideFinishListener {
         void onStatueChanged(CurrentTargetIndex status);
     }
 
@@ -58,10 +57,9 @@ public class DragScrollDetailsLayout extends LinearLayout {
     private View mCurrentTargetView;
 
     private Scroller mScroller;
-    private VelocityTrackerCompat mVelocityTrackerCompat;
 
     private VelocityTracker mVelocityTracker;
-    private OnSlideDetailsListener mOnSlideDetailsListener;
+    private OnSlideFinishListener mOnSlideDetailsListener;
     private CurrentTargetIndex mCurrentViewIndex = CurrentTargetIndex.UPSTAIRS;
 
     public DragScrollDetailsLayout(Context context) {
@@ -86,7 +84,7 @@ public class DragScrollDetailsLayout extends LinearLayout {
         setOrientation(VERTICAL);
     }
 
-    public void setOnSlideDetailsListener(OnSlideDetailsListener listener) {
+    public void setOnSlideDetailsListener(OnSlideFinishListener listener) {
         this.mOnSlideDetailsListener = listener;
     }
 
@@ -236,12 +234,13 @@ public class DragScrollDetailsLayout extends LinearLayout {
             }
         }
         mScroller.startScroll(0, getScrollY(), 0, (int) scrollY, mDuration);
+        if (mOnSlideDetailsListener != null) {
+            mOnSlideDetailsListener.onStatueChanged(mCurrentViewIndex);
+        }
         postInvalidate();
     }
 
-    /***
-     * speed is preferable
-     */
+
     private boolean needFlingToToggleView() {
         mVelocityTracker.computeCurrentVelocity(1000, mMaxFlingVelocity);
         if (mCurrentViewIndex == CurrentTargetIndex.UPSTAIRS) {
