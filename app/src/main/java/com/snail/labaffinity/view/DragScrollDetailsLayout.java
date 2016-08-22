@@ -295,15 +295,15 @@ public class DragScrollDetailsLayout extends LinearLayout {
     /***
      * judge is event  is in current view
      */
-    protected boolean isTransformedTouchPointInView(MotionEvent ev, View child, ViewGroup parent) {
+    protected boolean isTransformedTouchPointInView(MotionEvent ev, View view) {
         float x = ev.getRawX();
         float y = ev.getRawY();
         int[] rect = new int[2];
-        child.getLocationInWindow(rect);
+        view.getLocationInWindow(rect);
         float localX = x - rect[0];
         float localY = y - rect[1];
-        return localX >= 0 && localX < (child.getRight() - child.getLeft())
-                && localY >= 0 && localY < (child.getBottom() - child.getTop());
+        return localX >= 0 && localX < (view.getRight() - view.getLeft())
+                && localY >= 0 && localY < (view.getBottom() - view.getTop());
     }
 
     /***
@@ -313,7 +313,7 @@ public class DragScrollDetailsLayout extends LinearLayout {
      */
     private boolean canScrollVertically(View view, int offSet, MotionEvent ev) {
 
-        if (!mChildHasScrolled && !isTransformedTouchPointInView(ev, view, (ViewGroup) view.getParent())) {
+        if (!mChildHasScrolled && !isTransformedTouchPointInView(ev, view)) {
             return false;
         }
         if (ViewCompat.canScrollVertically(view, offSet)) {
