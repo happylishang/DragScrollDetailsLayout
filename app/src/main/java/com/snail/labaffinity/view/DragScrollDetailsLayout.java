@@ -51,6 +51,10 @@ public class DragScrollDetailsLayout extends LinearLayout {
     private float mDownMotionX;
     private float mInitialInterceptY;
     private float mPercent = DEFAULT_PERCENT;
+    /**
+     * flag for listview or scrollview ,if child overscrolled ,do not judge view region
+     */
+    private boolean mChildHasScrolled;
 
     private View mUpstairsView;
     private View mDownstairsView;
@@ -126,6 +130,7 @@ public class DragScrollDetailsLayout extends LinearLayout {
                     mVelocityTracker = VelocityTracker.obtain();
                 }
                 mVelocityTracker.clear();
+                mChildHasScrolled=false;
                 break;
             case MotionEvent.ACTION_MOVE:
                 adjustValidDownPoint(ev);
@@ -154,10 +159,11 @@ public class DragScrollDetailsLayout extends LinearLayout {
         return true;
     }
 
+
     private boolean checkCanInterceptTouchEvent(MotionEvent ev) {
         final float xDiff = ev.getX() - mDownMotionX;
         final float yDiff = ev.getY() - mDownMotionY;
-        if (!canChildScrollVertically((int) yDiff)) {
+        if (!canChildScrollVertically((int) yDiff,ev)) {
             mInitialInterceptY = (int) ev.getY();
             if (Math.abs(yDiff) > mTouchSlop && Math.abs(yDiff) >= Math.abs(xDiff)
                     && !(mCurrentViewIndex == CurrentTargetIndex.UPSTAIRS && yDiff > 0
@@ -167,6 +173,8 @@ public class DragScrollDetailsLayout extends LinearLayout {
         }
         return false;
     }
+
+
 
     private void adjustValidDownPoint(MotionEvent event) {
         if (mCurrentViewIndex == CurrentTargetIndex.UPSTAIRS && event.getY() > mDownMotionY
@@ -279,36 +287,63 @@ public class DragScrollDetailsLayout extends LinearLayout {
         setMeasuredDimension(getMeasuredWidth(), getMeasuredHeight());
     }
 
-    protected boolean canChildScrollVertically(int offSet) {
+    protected boolean canChildScrollVertically(int offSet,MotionEvent ev) {
         mCurrentTargetView = getCurrentTargetView();
-        return canScrollVertically(mCurrentTargetView, -offSet);
+        return canScrollVertically(mCurrentTargetView, -offSet, ev);
     }
 
+    /***
+     * judge is event  is in current view
+     */
+    protected boolean isTransformedTouchPointInView(float x, float y, View child, ViewGroup parent) {
+        float localX = x + parent.getScrollX() - child.getLeft();
+        float localY = y + parent.getScrollY() - child.getTop();
+        final boolean isInView = pointInView(child, localX, localY);
+        return isInView;
+    }
+
+    final boolean pointInView(View view, float localX, float localY) {
+        return localX >= 0 && localX < (view.getRight() - view.getLeft())
+                && localY >= 0 && localY < (view.getBottom() - view.getTop());
+    }
     /***
      * first    can view self  ScrollVertically
      * seconde  if View is ViewPager only judge current page
      * third    if view is viewgroup check it`s children
      */
-    private boolean canScrollVertically(View view, int offSet) {
 
+    private boolean canScrollVertically(View view, int offSet, MotionEvent ev) {
+
+        if (!mChildHasScrolled && !isTransformedTouchPointInView(ev.getX(), ev.getY(), view, (ViewGroup) view.getParent())) {
+            return false;
+        }
         if (ViewCompat.canScrollVertically(view, offSet)) {
+            mChildHasScrolled = true;
             return true;
         }
         if (view instanceof ViewPager) {
-            return canViewPagerScrollVertically((ViewPager) view, offSet);
+            return canViewPagerScrollVertically((ViewPager) view, offSet, ev);
         }
         if (view instanceof ViewGroup) {
             ViewGroup vGroup = (ViewGroup) view;
             for (int i = 0; i < vGroup.getChildCount(); i++) {
-                if (canScrollVertically(vGroup.getChildAt(i), offSet))
+                if (canScrollVertically(vGroup.getChildAt(i), offSet, ev)) {
+                    mChildHasScrolled = true;
                     return true;
+                }
             }
         }
         return false;
     }
 
-    private boolean canViewPagerScrollVertically(ViewPager viewPager, int offset) {
+    private boolean canViewPagerScrollVertically(ViewPager viewPager, int offset,MotionEvent ev) {
         View showView = ((SlideFragmentPagerAdapter) viewPager.getAdapter()).getPrimaryItem();
-        return showView != null && canScrollVertically(showView, offset);
+        return showView != null && canScrollVertically(showView, offset, ev);
     }
+
+    @Override
+    protected void onScrollChanged(int l, int t, int oldl, int oldt) {
+        super.onScrollChanged(l, t, oldl, oldt);
+    }
+
 }
