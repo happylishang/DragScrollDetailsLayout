@@ -295,26 +295,25 @@ public class DragScrollDetailsLayout extends LinearLayout {
     /***
      * judge is event  is in current view
      */
-    protected boolean isTransformedTouchPointInView(float x, float y, View child, ViewGroup parent) {
-        float localX = x + parent.getScrollX() - child.getLeft();
-        float localY = y + parent.getScrollY() - child.getTop();
-        final boolean isInView = pointInView(child, localX, localY);
-        return isInView;
+    protected boolean isTransformedTouchPointInView(MotionEvent ev, View child, ViewGroup parent) {
+        float x = ev.getRawX();
+        float y = ev.getRawY();
+        int[] rect = new int[2];
+        child.getLocationInWindow(rect);
+        float localX = x - rect[0];
+        float localY = y - rect[1];
+        return localX >= 0 && localX < (child.getRight() - child.getLeft())
+                && localY >= 0 && localY < (child.getBottom() - child.getTop());
     }
 
-    final boolean pointInView(View view, float localX, float localY) {
-        return localX >= 0 && localX < (view.getRight() - view.getLeft())
-                && localY >= 0 && localY < (view.getBottom() - view.getTop());
-    }
     /***
      * first    can view self  ScrollVertically
      * seconde  if View is ViewPager only judge current page
      * third    if view is viewgroup check it`s children
      */
-
     private boolean canScrollVertically(View view, int offSet, MotionEvent ev) {
 
-        if (!mChildHasScrolled && !isTransformedTouchPointInView(ev.getX(), ev.getY(), view, (ViewGroup) view.getParent())) {
+        if (!mChildHasScrolled && !isTransformedTouchPointInView(ev, view, (ViewGroup) view.getParent())) {
             return false;
         }
         if (ViewCompat.canScrollVertically(view, offSet)) {
