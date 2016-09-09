@@ -23,6 +23,7 @@
         <activity android:name=".activity.ViewPagerlidingLayoutActivity"/>
         <activity android:name=".activity.DragListViewActivity"/>
         <activity android:name=".activity.DragWebViewActivity"/>
+        <activity android:name=".activity.DragWebViewListActivity"/>
         <service android:name=".service.BackGroundService"/>
     </application>
 </manifest>

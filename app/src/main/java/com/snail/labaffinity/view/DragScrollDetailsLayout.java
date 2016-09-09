@@ -50,9 +50,14 @@ public class DragScrollDetailsLayout extends LinearLayout {
     private float mDownMotionY;
     private float mDownMotionX;
     private float mInitialInterceptY;
+
+    public void setPercent(float percent) {
+        mPercent = percent;
+    }
+
     private float mPercent = DEFAULT_PERCENT;
     /**
-     * flag for listview or scrollview ,if child overscrolled ,do not judge view region
+     * flag for listview or scrollview ,if child overscrolled ,do not judge view region 滚过头了，还是可以滚动
      */
     private boolean mChildHasScrolled;
 
@@ -105,7 +110,7 @@ public class DragScrollDetailsLayout extends LinearLayout {
     }
 
     /**
-     * requestDisallowInterceptTouchEvent guarantee intercept event as DragScrollDetailsLayout wish
+     * requestDisallowInterceptTouchEvent guarantee DragScrollDetailsLayout intercept event as wish
      */
     @Override
     public boolean dispatchTouchEvent(MotionEvent ev) {
@@ -294,6 +299,7 @@ public class DragScrollDetailsLayout extends LinearLayout {
 
     /***
      * judge is event  is in current view
+     * 判断MotionEvent是否处于View上面
      */
     protected boolean isTransformedTouchPointInView(MotionEvent ev, View view) {
         float x = ev.getRawX();
@@ -344,5 +350,6 @@ public class DragScrollDetailsLayout extends LinearLayout {
     protected void onScrollChanged(int l, int t, int oldl, int oldt) {
         super.onScrollChanged(l, t, oldl, oldt);
     }
+
 
 }

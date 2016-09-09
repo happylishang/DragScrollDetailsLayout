@@ -69,4 +69,10 @@ public class MainActivity extends AppCompatActivity {
         Intent intent = new Intent(MainActivity.this, DragListViewActivity.class);
         startActivity(intent);
     }
+    @OnClick(R.id.sliding_webview_list)
+    void weblist() {
+        Intent intent = new Intent(MainActivity.this, DragWebViewListActivity.class);
+        startActivity(intent);
+    }
+
 }

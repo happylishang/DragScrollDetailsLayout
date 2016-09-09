@@ -41,6 +41,12 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="ListViewDrag"/>
+
+            <Button
+                android:id="@+id/sliding_webview_list"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="WebViewList"/>
         </LinearLayout>
     </ScrollView>
 </RelativeLayout>

@@ -5,6 +5,7 @@
               android:orientation="vertical">
 
     <com.snail.labaffinity.view.DragScrollDetailsLayout
+
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="#990099cc"
