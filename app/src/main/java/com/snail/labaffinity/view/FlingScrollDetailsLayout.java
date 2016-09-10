@@ -49,7 +49,6 @@ public class FlingScrollDetailsLayout extends LinearLayout {
     private float mTouchSlop;
     private float mDownMotionY;
     private float mDownMotionX;
-    private float mInitialInterceptY;
     private int mUpStairsViewHeight;
 
     public void setPercent(float percent) {
@@ -112,22 +111,29 @@ public class FlingScrollDetailsLayout extends LinearLayout {
 
     private int mInitialOffSet;
 
+    private static int INVALID = -1;
+    private ScrollDirection mScrollDirection;
+
+    enum ScrollDirection {
+        INVALID, VERTICAL, HORIZONTAL;
+    }
+
     /**
      * requestDisallowInterceptTouchEvent guarantee DragScrollDetailsLayout intercept event as wish
      */
     @Override
     public boolean dispatchTouchEvent(MotionEvent ev) {
-        requestDisallowInterceptTouchEvent(false);
-
         switch (ev.getActionMasked()) {
             case MotionEvent.ACTION_DOWN:
                 if (mVelocityTracker == null) {
                     mVelocityTracker = VelocityTracker.obtain();
                     mVelocityTracker.clear();
                 }
+                mScrollDirection = ScrollDirection.INVALID;
+                mScroller.abortAnimation();
                 mInitialOffSet = getScrollY();
-                mDownMotionX = ev.getX();
                 mDownMotionY = ev.getY();
+                mDownMotionX = ev.getX();
                 if (mVelocityTracker == null) {
                     mVelocityTracker = VelocityTracker.obtain();
                 }
@@ -135,22 +141,18 @@ public class FlingScrollDetailsLayout extends LinearLayout {
                 mChildHasScrolled = false;
                 break;
             case MotionEvent.ACTION_MOVE:
-                if (ev.getY() - mDownMotionY < 0) {
-                    if (getScrollY() <= mUpStairsViewHeight) {
-                        scrollTo(0, (int) Math.min((mDownMotionY - ev.getY()) + mInitialOffSet, mUpStairsViewHeight));
-                    }
-                } else {
-                    if (getScrollY() <= 0) {
-                        mDownMotionY = ev.getY();
-                    } else {
-                        if (canScrollVertically(mDownstairsView, (int) (mDownMotionY - ev.getY()), ev)) {
-                            mDownMotionY = ev.getY();
+                if (mScrollDirection == ScrollDirection.INVALID) {
+                    if (Math.abs(ev.getY() - mDownMotionY) > mTouchSlop) {
+                        if (Math.abs(ev.getY() - mDownMotionY) < Math.abs(ev.getX() - mDownMotionX)) {
+                            mScrollDirection = ScrollDirection.HORIZONTAL;
                         } else {
-                            scrollTo(0, (int) (mDownMotionY - ev.getY()) + mInitialOffSet);
+                            mScrollDirection = ScrollDirection.VERTICAL;
                         }
                     }
                 }
-                mVelocityTracker.addMovement(ev);
+                if (mScrollDirection == ScrollDirection.VERTICAL) {
+                    handlerScroll(ev);
+                }
                 break;
             case MotionEvent.ACTION_UP:
             case MotionEvent.ACTION_CANCEL:
@@ -162,6 +164,27 @@ public class FlingScrollDetailsLayout extends LinearLayout {
         }
 
         return super.dispatchTouchEvent(ev);
+    }
+
+    private void handlerScroll(MotionEvent ev) {
+        if (ev.getY() - mDownMotionY < 0) {
+            if (getScrollY() <= mUpStairsViewHeight) {
+                scrollTo(0, (int) Math.min((mDownMotionY - ev.getY()) + mInitialOffSet, mUpStairsViewHeight));
+            }
+        } else {
+            if (getScrollY() <= 0) {
+                mDownMotionY = ev.getY();
+                mDownMotionX = ev.getX();
+            } else {
+                if (canScrollVertically(mDownstairsView, (int) (mDownMotionY - ev.getY()), ev)) {
+                    mDownMotionY = ev.getY();
+                    mDownMotionX = ev.getX();
+                } else {
+                    scrollTo(0, (int) (mDownMotionY - ev.getY()) + mInitialOffSet);
+                }
+            }
+        }
+        mVelocityTracker.addMovement(ev);
     }
 
     private void recycleVelocityTracker() {
@@ -183,7 +206,7 @@ public class FlingScrollDetailsLayout extends LinearLayout {
             return;
         }
         float mVelocity = mVelocityTracker.getYVelocity();
-        scrollY = mVelocity / 10;
+        scrollY = mVelocity / 8;
         if (scrollY > 0) scrollY = Math.min(getScrollY(), scrollY);
         else scrollY = Math.max(getScrollY() - mUpStairsViewHeight, scrollY);
         mScroller.startScroll(0, getScrollY(), 0, (int) -scrollY, mDuration);
@@ -213,14 +236,11 @@ public class FlingScrollDetailsLayout extends LinearLayout {
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
-        measureChildren(widthMeasureSpec, heightMeasureSpec);
         setMeasuredDimension(getMeasuredWidth(), getMeasuredHeight());
+        measureChildren(widthMeasureSpec, heightMeasureSpec);
+        int measureSpec = MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED);
+        mUpstairsView.measure(widthMeasureSpec, measureSpec);
         mUpStairsViewHeight = mUpstairsView.getMeasuredHeight();
-    }
-
-    protected boolean canChildScrollVertically(int offSet, MotionEvent ev) {
-        mCurrentTargetView = getCurrentTargetView();
-        return canScrollVertically(mCurrentTargetView, -offSet, ev);
     }
 
     /***
@@ -276,6 +296,4 @@ public class FlingScrollDetailsLayout extends LinearLayout {
     protected void onScrollChanged(int l, int t, int oldl, int oldt) {
         super.onScrollChanged(l, t, oldl, oldt);
     }
-
-
 }
