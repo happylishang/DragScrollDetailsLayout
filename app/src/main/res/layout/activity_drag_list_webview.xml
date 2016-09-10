@@ -4,7 +4,7 @@
               android:layout_height="match_parent"
               android:orientation="vertical">
 
-    <com.snail.labaffinity.view.DragScrollDetailsLayout
+    <com.snail.labaffinity.view.FlingScrollDetailsLayout
 
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -70,5 +70,5 @@
             android:id="@+id/webview"
             android:layout_width="match_parent"
             android:layout_height="match_parent"/>
-    </com.snail.labaffinity.view.DragScrollDetailsLayout>
+    </com.snail.labaffinity.view.FlingScrollDetailsLayout>
 </LinearLayout>

@@ -6,7 +6,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.webkit.WebView;
 
 import com.snail.labaffinity.R;
-import com.snail.labaffinity.view.DragScrollDetailsLayout;
+import com.snail.labaffinity.view.FlingScrollDetailsLayout;
 
 /**
  * Author: hzlishang
@@ -22,7 +22,7 @@ public class DragWebViewListActivity extends AppCompatActivity {
         setContentView(R.layout.activity_drag_webview_list);
         WebView webView= (WebView) findViewById(R.id.webview);
         webView.loadUrl("http://happylishang.github.io/");
-        DragScrollDetailsLayout md= (DragScrollDetailsLayout) findViewById(R.id.drag_lv);
+        FlingScrollDetailsLayout md= (FlingScrollDetailsLayout) findViewById(R.id.drag_lv);
         md.setPercent(0);
     }
 }

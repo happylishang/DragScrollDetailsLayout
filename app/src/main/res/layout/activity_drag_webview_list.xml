@@ -4,7 +4,7 @@
               android:layout_height="match_parent"
               android:orientation="vertical">
 
-    <com.snail.labaffinity.view.DragScrollDetailsLayout
+    <com.snail.labaffinity.view.FlingScrollDetailsLayout
 
         android:id="@+id/drag_lv"
         android:layout_width="match_parent"
@@ -71,5 +71,5 @@
             </LinearLayout>
         </ScrollView>
 
-    </com.snail.labaffinity.view.DragScrollDetailsLayout>
+    </com.snail.labaffinity.view.FlingScrollDetailsLayout>
 </LinearLayout>

@@ -12,7 +12,7 @@ import android.widget.TextView;
 import com.snail.labaffinity.R;
 import com.snail.labaffinity.adapter.SlideFragmentPagerAdapter;
 import com.snail.labaffinity.service.BackGroundService;
-import com.snail.labaffinity.view.DragScrollDetailsLayout;
+import com.snail.labaffinity.view.FlingScrollDetailsLayout;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -22,7 +22,7 @@ public class ViewPagerlidingLayoutActivity
     @BindView(R.id.viewpager)
     ViewPager viewPager;
     @BindView(R.id.drag_content)
-    DragScrollDetailsLayout mDragScrollDetailsLayout;
+    FlingScrollDetailsLayout mDragScrollDetailsLayout;
     @BindView(R.id.flag_tips)
     TextView mTextView;
 
@@ -55,10 +55,10 @@ public class ViewPagerlidingLayoutActivity
         });
         viewPager.setAdapter(new SlideFragmentPagerAdapter(getSupportFragmentManager()));
         tabLayout.setupWithViewPager(viewPager);
-        mDragScrollDetailsLayout.setOnSlideDetailsListener(new DragScrollDetailsLayout.OnSlideFinishListener() {
+        mDragScrollDetailsLayout.setOnSlideDetailsListener(new FlingScrollDetailsLayout.OnSlideFinishListener() {
             @Override
-            public void onStatueChanged(DragScrollDetailsLayout.CurrentTargetIndex status) {
-                if (status == DragScrollDetailsLayout.CurrentTargetIndex.UPSTAIRS)
+            public void onStatueChanged(FlingScrollDetailsLayout.CurrentTargetIndex status) {
+                if (status == FlingScrollDetailsLayout.CurrentTargetIndex.UPSTAIRS)
                     mTextView.setText("pull up to show more");
                 else
                     mTextView.setText("pull down to top");

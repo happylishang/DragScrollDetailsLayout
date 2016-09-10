@@ -22,7 +22,7 @@ import com.snail.labaffinity.adapter.SlideFragmentPagerAdapter;
  * 3 bug :can not assertain which View is inTouch
  */
 
-public class DragScrollDetailsLayout extends LinearLayout {
+public class FlingScrollDetailsLayout extends LinearLayout {
 
 
     public interface OnSlideFinishListener {
@@ -50,7 +50,7 @@ public class DragScrollDetailsLayout extends LinearLayout {
     private float mDownMotionY;
     private float mDownMotionX;
     private float mInitialInterceptY;
-
+    private int mUpStairsViewHeight;
     public void setPercent(float percent) {
         mPercent = percent;
     }
@@ -71,20 +71,20 @@ public class DragScrollDetailsLayout extends LinearLayout {
     private OnSlideFinishListener mOnSlideDetailsListener;
     private CurrentTargetIndex mCurrentViewIndex = CurrentTargetIndex.UPSTAIRS;
 
-    public DragScrollDetailsLayout(Context context) {
+    public FlingScrollDetailsLayout(Context context) {
         this(context, null);
     }
 
-    public DragScrollDetailsLayout(Context context, AttributeSet attrs) {
+    public FlingScrollDetailsLayout(Context context, AttributeSet attrs) {
         this(context, attrs, 0);
     }
 
-    public DragScrollDetailsLayout(Context context, AttributeSet attrs, int defStyleAttr) {
+    public FlingScrollDetailsLayout(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.DragScrollDetailsLayout, defStyleAttr, 0);
-        mPercent = a.getFloat(R.styleable.DragScrollDetailsLayout_percent, DEFAULT_PERCENT);
-        mDuration = a.getInt(R.styleable.DragScrollDetailsLayout_duration, DEFAULT_DURATION);
-        mDefaultPanel = a.getInt(R.styleable.DragScrollDetailsLayout_default_panel, 0);
+        TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.FlingScrollDetailsLayout, defStyleAttr, 0);
+        mPercent = a.getFloat(R.styleable.FlingScrollDetailsLayout_percent, DEFAULT_PERCENT);
+        mDuration = a.getInt(R.styleable.FlingScrollDetailsLayout_duration, DEFAULT_DURATION);
+        mDefaultPanel = a.getInt(R.styleable.FlingScrollDetailsLayout_default_panel, 0);
         a.recycle();
         mScroller = new Scroller(getContext());
         mTouchSlop = ViewConfiguration.get(getContext()).getScaledTouchSlop();
@@ -115,8 +115,28 @@ public class DragScrollDetailsLayout extends LinearLayout {
     @Override
     public boolean dispatchTouchEvent(MotionEvent ev) {
         requestDisallowInterceptTouchEvent(false);
+
+        switch (ev.getActionMasked()) {
+            case MotionEvent.ACTION_DOWN:
+                mDownMotionX = ev.getX();
+                mDownMotionY = ev.getY();
+                if (mVelocityTracker == null) {
+                    mVelocityTracker = VelocityTracker.obtain();
+                }
+                mVelocityTracker.clear();
+                mChildHasScrolled=false;
+                break;
+            case MotionEvent.ACTION_MOVE:
+                adjustValidDownPoint(ev);
+                return checkCanInterceptTouchEvent(ev);
+            default:
+                break;
+        }
+        
         return super.dispatchTouchEvent(ev);
     }
+
+
 
     /**
      * intercept rules：
@@ -164,7 +184,6 @@ public class DragScrollDetailsLayout extends LinearLayout {
         return true;
     }
 
-
     private boolean checkCanInterceptTouchEvent(MotionEvent ev) {
         final float xDiff = ev.getX() - mDownMotionX;
         final float yDiff = ev.getY() - mDownMotionY;
@@ -196,10 +215,10 @@ public class DragScrollDetailsLayout extends LinearLayout {
             }
             scrollTo(0, (int) (mInitialInterceptY - event.getY()));
         } else {
-            if (getScrollY() >= mUpstairsView.getMeasuredHeight() && event.getY() < mInitialInterceptY) {
+            if (getScrollY() >= mUpStairsViewHeight && event.getY() < mInitialInterceptY) {
                 mInitialInterceptY = (int) event.getY();
             }
-            scrollTo(0, (int) (mInitialInterceptY - event.getY() + mUpstairsView.getMeasuredHeight()));
+            scrollTo(0, (int) (mInitialInterceptY - event.getY() + mUpStairsViewHeight));
         }
         mVelocityTracker.addMovement(event);
     }
@@ -218,7 +237,7 @@ public class DragScrollDetailsLayout extends LinearLayout {
 
     private void flingToFinishScroll() {
 
-        final int pHeight = mUpstairsView.getMeasuredHeight();
+        final int pHeight = mUpStairsViewHeight;
         final int threshold = (int) (pHeight * mPercent);
         float scrollY = getScrollY();
         if (CurrentTargetIndex.UPSTAIRS == mCurrentViewIndex) {
@@ -283,13 +302,16 @@ public class DragScrollDetailsLayout extends LinearLayout {
     }
 
     /***
-     * 复用已经实现的View，省却了测量布局之类的麻烦
+     * 复用已经实现的View，省却了测量布局之类的麻烦,如果只是采用super.onMeasure，
+     * LinearLayout会对View的MeasureSpec进行预处理导致获取不到底部View合理的尺寸，
+     * super.onMeasure帮助获取LinearLayout的高度，measureChildren帮助确定所有VIew高度
      */
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
         measureChildren(widthMeasureSpec, heightMeasureSpec);
         setMeasuredDimension(getMeasuredWidth(), getMeasuredHeight());
+        mUpStairsViewHeight=mUpstairsView.getMeasuredHeight();
     }
 
     protected boolean canChildScrollVertically(int offSet,MotionEvent ev) {
