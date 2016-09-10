@@ -29,6 +29,13 @@ public class FlingScrollDetailsLayout extends LinearLayout {
         void onStatueChanged(CurrentTargetIndex status);
     }
 
+    private int mInitialOffSet;
+    private ScrollDirection mScrollDirection;
+
+    enum ScrollDirection {
+        INVALID, VERTICAL, HORIZONTAL
+    }
+
     public enum CurrentTargetIndex {
         UPSTAIRS,
         DOWNSTAIRS;
@@ -98,6 +105,17 @@ public class FlingScrollDetailsLayout extends LinearLayout {
     }
 
     @Override
+    public boolean onInterceptTouchEvent(MotionEvent ev) {
+
+        return mScrollDirection == ScrollDirection.VERTICAL && getScrollY() < mUpStairsViewHeight ? true : super.onInterceptTouchEvent(ev);
+    }
+
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+        return true;
+    }
+
+    @Override
     protected void onFinishInflate() {
         super.onFinishInflate();
 
@@ -107,15 +125,6 @@ public class FlingScrollDetailsLayout extends LinearLayout {
         }
         mUpstairsView = getChildAt(0);
         mDownstairsView = getChildAt(1);
-    }
-
-    private int mInitialOffSet;
-
-    private static int INVALID = -1;
-    private ScrollDirection mScrollDirection;
-
-    enum ScrollDirection {
-        INVALID, VERTICAL, HORIZONTAL;
     }
 
     /**
@@ -231,7 +240,7 @@ public class FlingScrollDetailsLayout extends LinearLayout {
     /***
      * 复用已经实现的View，省却了测量布局之类的麻烦,如果只是采用super.onMeasure，
      * LinearLayout会对View的MeasureSpec进行预处理导致获取不到底部View合理的尺寸，
-     * super.onMeasure帮助获取LinearLayout的高度，measureChildren帮助确定所有VIew高度
+     * super.onMeasure帮助获取LinearLayout的高度，measureChildren帮助确定所有View高度
      */
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
