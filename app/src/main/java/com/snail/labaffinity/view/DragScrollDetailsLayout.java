@@ -10,6 +10,7 @@ import android.view.VelocityTracker;
 import android.view.View;
 import android.view.ViewConfiguration;
 import android.view.ViewGroup;
+import android.view.animation.DecelerateInterpolator;
 import android.widget.LinearLayout;
 import android.widget.Scroller;
 
@@ -86,7 +87,7 @@ public class DragScrollDetailsLayout extends LinearLayout {
         mDuration = a.getInt(R.styleable.DragScrollDetailsLayout_duration, DEFAULT_DURATION);
         mDefaultPanel = a.getInt(R.styleable.DragScrollDetailsLayout_default_panel, 0);
         a.recycle();
-        mScroller = new Scroller(getContext());
+        mScroller = new Scroller(getContext(),new DecelerateInterpolator());
         mTouchSlop = ViewConfiguration.get(getContext()).getScaledTouchSlop();
         mMaxFlingVelocity = ViewConfiguration.get(getContext()).getScaledMaximumFlingVelocity();
         mMiniFlingVelocity = ViewConfiguration.get(getContext()).getScaledMinimumFlingVelocity();
