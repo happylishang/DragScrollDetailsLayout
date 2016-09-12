@@ -11,15 +11,15 @@ import android.view.MotionEvent;
  * Des:
  * version:
  */
-public class CustomViewPager extends ViewPager {
+public class NoneScrollViewPager extends ViewPager {
 
     private boolean mCanScroll;
 
-    public CustomViewPager(Context context) {
+    public NoneScrollViewPager(Context context) {
         this(context, null);
     }
 
-    public CustomViewPager(Context context, AttributeSet attrs) {
+    public NoneScrollViewPager(Context context, AttributeSet attrs) {
         super(context, attrs);
     }
 
