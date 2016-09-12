@@ -30,7 +30,6 @@ public class FlingScrollDetailsLayout extends LinearLayout {
         void onStatueChanged(CurrentTargetIndex status);
     }
 
-    private int mInitialOffSet;
     private ScrollDirection mScrollDirection;
 
     enum ScrollDirection {
@@ -60,8 +59,9 @@ public class FlingScrollDetailsLayout extends LinearLayout {
     private float mDownMotionY;
     private float mDownMotionX;
     private int mUpStairsViewHeight;
-    private CustomViewPager mCustomViewPager;
-
+    private NoneScrollViewPager mCustomViewPager;
+    private int mInitialOffSet;
+    
     public void setPercent(float percent) {
         mPercent = percent;
     }
@@ -120,13 +120,13 @@ public class FlingScrollDetailsLayout extends LinearLayout {
         mUpstairsView = getChildAt(0);
         mDownstairsView = getChildAt(1);
 
-        if (mDownstairsView instanceof CustomViewPager) {
-            mCustomViewPager = (CustomViewPager) mDownstairsView;
+        if (mDownstairsView instanceof NoneScrollViewPager) {
+            mCustomViewPager = (NoneScrollViewPager) mDownstairsView;
         } else if (mDownstairsView instanceof ViewGroup) {
             ViewGroup viewGroup = (ViewGroup) mDownstairsView;
             for (int i = 0; i < viewGroup.getChildCount(); i++) {
-                if (viewGroup.getChildAt(i) instanceof CustomViewPager) {
-                    mCustomViewPager = (CustomViewPager) viewGroup.getChildAt(i);
+                if (viewGroup.getChildAt(i) instanceof NoneScrollViewPager) {
+                    mCustomViewPager = (NoneScrollViewPager) viewGroup.getChildAt(i);
                 }
             }
         }

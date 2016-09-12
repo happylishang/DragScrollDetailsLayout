@@ -87,12 +87,12 @@
 
             </android.support.design.widget.TabLayout>
 
-            <com.snail.labaffinity.view.CustomViewPager
+            <com.snail.labaffinity.view.NoneScrollViewPager
                 android:id="@+id/viewpager"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
 
-            </com.snail.labaffinity.view.CustomViewPager>
+            </com.snail.labaffinity.view.NoneScrollViewPager>
         </LinearLayout>
 
 
