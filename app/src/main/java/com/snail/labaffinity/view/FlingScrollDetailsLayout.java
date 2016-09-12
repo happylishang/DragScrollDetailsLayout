@@ -162,7 +162,8 @@ public class FlingScrollDetailsLayout extends LinearLayout {
                             mScrollDirection = ScrollDirection.HORIZONTAL;
                         } else {
                             mScrollDirection = ScrollDirection.VERTICAL;
-                            mCustomViewPager.setCanScroll(false);
+                            if (mCustomViewPager != null)
+                                mCustomViewPager.setCanScroll(false);
                         }
                     }
                 }
