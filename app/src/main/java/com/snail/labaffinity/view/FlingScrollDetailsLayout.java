@@ -159,12 +159,15 @@ public class FlingScrollDetailsLayout extends LinearLayout {
                         }
                     }
                 }
-                if (mScrollDirection == ScrollDirection.VERTICAL) {
-                    if (handlerScroll(ev)) return true;
-                }
+                if (mScrollDirection == ScrollDirection.VERTICAL)
+                    handlerScroll(ev);
                 break;
             case MotionEvent.ACTION_UP:
             case MotionEvent.ACTION_CANCEL:
+                if (mScrollDirection == ScrollDirection.VERTICAL &&
+                        !canScrollVertically(mDownstairsView, (int) (mDownMotionY - ev.getY()), ev)) {
+                    ev.setAction(MotionEvent.ACTION_CANCEL);
+                }
                 flingToFinishScroll();
                 recycleVelocityTracker();
                 break;
@@ -174,14 +177,13 @@ public class FlingScrollDetailsLayout extends LinearLayout {
         return super.dispatchTouchEvent(ev);
     }
 
-    private boolean handlerScroll(MotionEvent ev) {
+    private void handlerScroll(MotionEvent ev) {
 
         if (ev.getY() - mDownMotionY < 0) {
             if (getScrollY() < mUpStairsViewHeight) {
                 scrollTo(0, (int) Math.min((mDownMotionY - ev.getY()) + mInitialOffSet, mUpStairsViewHeight));
             } else {
                 mInitialOffSet = getScrollY();
-                return false;
             }
         } else {
             if (getScrollY() <= 0) {
@@ -193,18 +195,12 @@ public class FlingScrollDetailsLayout extends LinearLayout {
                     mDownMotionY = ev.getY();
                     mDownMotionX = ev.getX();
                     mInitialOffSet = getScrollY();
-                    return false;
                 } else {
                     scrollTo(0, (int) (mDownMotionY - ev.getY()) + mInitialOffSet);
                 }
             }
         }
         mVelocityTracker.addMovement(ev);
-        if (ev.getActionMasked() == MotionEvent.ACTION_UP) {
-            ev.setAction(MotionEvent.ACTION_CANCEL);
-        }
-        super.dispatchTouchEvent(MotionEvent.obtain(ev));
-        return true;
     }
 
     private void recycleVelocityTracker() {
@@ -227,8 +223,8 @@ public class FlingScrollDetailsLayout extends LinearLayout {
         }
         float mVelocity = mVelocityTracker.getYVelocity();
         scrollY = mVelocity / 7;
-        if (scrollY > 0) scrollY = Math.min(getScrollY(), scrollY);
-        else scrollY = Math.max(getScrollY() - mUpStairsViewHeight, scrollY);
+        scrollY = scrollY > 0 ? Math.min(getScrollY(), scrollY)
+                : Math.max(getScrollY() - mUpStairsViewHeight, scrollY);
         mScroller.startScroll(0, getScrollY(), 0, (int) -scrollY, mDuration);
         postInvalidate();
     }
