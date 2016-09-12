@@ -61,26 +61,18 @@ public class FlingScrollDetailsLayout extends LinearLayout {
     private int mUpStairsViewHeight;
     private NoneScrollViewPager mCustomViewPager;
     private int mInitialOffSet;
-    
+    private float mPercent = DEFAULT_PERCENT;
+    private View mUpstairsView;
+    private View mDownstairsView;
+    private Scroller mScroller;
+    private VelocityTracker mVelocityTracker;
+    private OnSlideFinishListener mOnSlideDetailsListener;
+    private CurrentTargetIndex mCurrentViewIndex = CurrentTargetIndex.UPSTAIRS;
+
     public void setPercent(float percent) {
         mPercent = percent;
     }
 
-    private float mPercent = DEFAULT_PERCENT;
-    /**
-     * flag for listview or scrollview ,if child overscrolled ,do not judge view region 滚过头了，还是可以滚动
-     */
-    private boolean mChildHasScrolled;
-
-    private View mUpstairsView;
-    private View mDownstairsView;
-    private View mCurrentTargetView;
-
-    private Scroller mScroller;
-
-    private VelocityTracker mVelocityTracker;
-    private OnSlideFinishListener mOnSlideDetailsListener;
-    private CurrentTargetIndex mCurrentViewIndex = CurrentTargetIndex.UPSTAIRS;
 
     public FlingScrollDetailsLayout(Context context) {
         this(context, null);
@@ -97,7 +89,7 @@ public class FlingScrollDetailsLayout extends LinearLayout {
         mDuration = a.getInt(R.styleable.FlingScrollDetailsLayout_duration, DEFAULT_DURATION);
         mDefaultPanel = a.getInt(R.styleable.FlingScrollDetailsLayout_default_panel, 0);
         a.recycle();
-        mScroller = new Scroller(getContext(),new DecelerateInterpolator());
+        mScroller = new Scroller(getContext(), new DecelerateInterpolator());
         mTouchSlop = ViewConfiguration.get(getContext()).getScaledTouchSlop();
         mMaxFlingVelocity = ViewConfiguration.get(getContext()).getScaledMaximumFlingVelocity();
         mMiniFlingVelocity = ViewConfiguration.get(getContext()).getScaledMinimumFlingVelocity();
@@ -152,7 +144,6 @@ public class FlingScrollDetailsLayout extends LinearLayout {
                     mVelocityTracker = VelocityTracker.obtain();
                 }
                 mVelocityTracker.clear();
-                mChildHasScrolled = false;
                 if (mCustomViewPager != null)
                     mCustomViewPager.setCanScroll(true);
                 break;
@@ -169,7 +160,7 @@ public class FlingScrollDetailsLayout extends LinearLayout {
                     }
                 }
                 if (mScrollDirection == ScrollDirection.VERTICAL) {
-                    handlerScroll(ev);
+                    if (handlerScroll(ev)) return true;
                 }
                 break;
             case MotionEvent.ACTION_UP:
@@ -183,26 +174,37 @@ public class FlingScrollDetailsLayout extends LinearLayout {
         return super.dispatchTouchEvent(ev);
     }
 
-    private void handlerScroll(MotionEvent ev) {
+    private boolean handlerScroll(MotionEvent ev) {
 
         if (ev.getY() - mDownMotionY < 0) {
-            if (getScrollY() <= mUpStairsViewHeight) {
+            if (getScrollY() < mUpStairsViewHeight) {
                 scrollTo(0, (int) Math.min((mDownMotionY - ev.getY()) + mInitialOffSet, mUpStairsViewHeight));
+            } else {
+                mInitialOffSet = getScrollY();
+                return false;
             }
         } else {
             if (getScrollY() <= 0) {
                 mDownMotionY = ev.getY();
                 mDownMotionX = ev.getX();
+                mInitialOffSet = getScrollY();
             } else {
                 if (canScrollVertically(mDownstairsView, (int) (mDownMotionY - ev.getY()), ev)) {
                     mDownMotionY = ev.getY();
                     mDownMotionX = ev.getX();
+                    mInitialOffSet = getScrollY();
+                    return false;
                 } else {
                     scrollTo(0, (int) (mDownMotionY - ev.getY()) + mInitialOffSet);
                 }
             }
         }
         mVelocityTracker.addMovement(ev);
+        if (ev.getActionMasked() == MotionEvent.ACTION_UP) {
+            ev.setAction(MotionEvent.ACTION_CANCEL);
+        }
+        super.dispatchTouchEvent(MotionEvent.obtain(ev));
+        return true;
     }
 
     private void recycleVelocityTracker() {
@@ -229,12 +231,6 @@ public class FlingScrollDetailsLayout extends LinearLayout {
         else scrollY = Math.max(getScrollY() - mUpStairsViewHeight, scrollY);
         mScroller.startScroll(0, getScrollY(), 0, (int) -scrollY, mDuration);
         postInvalidate();
-    }
-
-
-    private View getCurrentTargetView() {
-        return mCurrentViewIndex == CurrentTargetIndex.UPSTAIRS
-                ? mUpstairsView : mDownstairsView;
     }
 
     @Override
@@ -283,11 +279,10 @@ public class FlingScrollDetailsLayout extends LinearLayout {
      */
     private boolean canScrollVertically(View view, int offSet, MotionEvent ev) {
 
-        if (!mChildHasScrolled && !isTransformedTouchPointInView(ev, view)) {
+        if (!isTransformedTouchPointInView(ev, view)) {
             return false;
         }
         if (ViewCompat.canScrollVertically(view, offSet)) {
-            mChildHasScrolled = true;
             return true;
         }
         if (view instanceof ViewPager) {
@@ -297,7 +292,6 @@ public class FlingScrollDetailsLayout extends LinearLayout {
             ViewGroup vGroup = (ViewGroup) view;
             for (int i = 0; i < vGroup.getChildCount(); i++) {
                 if (canScrollVertically(vGroup.getChildAt(i), offSet, ev)) {
-                    mChildHasScrolled = true;
                     return true;
                 }
             }
