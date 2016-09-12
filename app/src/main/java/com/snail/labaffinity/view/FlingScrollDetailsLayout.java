@@ -33,7 +33,9 @@ public class FlingScrollDetailsLayout extends LinearLayout {
     private ScrollDirection mScrollDirection;
 
     enum ScrollDirection {
-        INVALID, VERTICAL, HORIZONTAL
+        INVALID,
+        VERTICAL,
+        HORIZONTAL
     }
 
     public enum CurrentTargetIndex {
@@ -57,6 +59,7 @@ public class FlingScrollDetailsLayout extends LinearLayout {
     private float mDownMotionY;
     private float mDownMotionX;
     private int mUpStairsViewHeight;
+    private CustomViewPager mCustomViewPager;
 
     public void setPercent(float percent) {
         mPercent = percent;
@@ -104,16 +107,6 @@ public class FlingScrollDetailsLayout extends LinearLayout {
         this.mOnSlideDetailsListener = listener;
     }
 
-    @Override
-    public boolean onInterceptTouchEvent(MotionEvent ev) {
-
-        return mScrollDirection == ScrollDirection.VERTICAL && getScrollY() < mUpStairsViewHeight ? true : super.onInterceptTouchEvent(ev);
-    }
-
-    @Override
-    public boolean onTouchEvent(MotionEvent event) {
-        return true;
-    }
 
     @Override
     protected void onFinishInflate() {
@@ -121,10 +114,21 @@ public class FlingScrollDetailsLayout extends LinearLayout {
 
         final int childCount = getChildCount();
         if (1 >= childCount) {
-            throw new RuntimeException("SlideDetailsLayout only accept childs more than 1!!");
+            throw new RuntimeException(" only accept childs more than 1!!");
         }
         mUpstairsView = getChildAt(0);
         mDownstairsView = getChildAt(1);
+
+        if (mDownstairsView instanceof CustomViewPager) {
+            mCustomViewPager = (CustomViewPager) mDownstairsView;
+        } else if (mDownstairsView instanceof ViewGroup) {
+            ViewGroup viewGroup = (ViewGroup) mDownstairsView;
+            for (int i = 0; i < viewGroup.getChildCount(); i++) {
+                if (viewGroup.getChildAt(i) instanceof CustomViewPager) {
+                    mCustomViewPager = (CustomViewPager) viewGroup.getChildAt(i);
+                }
+            }
+        }
     }
 
     /**
@@ -148,6 +152,8 @@ public class FlingScrollDetailsLayout extends LinearLayout {
                 }
                 mVelocityTracker.clear();
                 mChildHasScrolled = false;
+                if (mCustomViewPager != null)
+                    mCustomViewPager.setCanScroll(true);
                 break;
             case MotionEvent.ACTION_MOVE:
                 if (mScrollDirection == ScrollDirection.INVALID) {
@@ -156,6 +162,7 @@ public class FlingScrollDetailsLayout extends LinearLayout {
                             mScrollDirection = ScrollDirection.HORIZONTAL;
                         } else {
                             mScrollDirection = ScrollDirection.VERTICAL;
+                            mCustomViewPager.setCanScroll(false);
                         }
                     }
                 }
@@ -171,11 +178,11 @@ public class FlingScrollDetailsLayout extends LinearLayout {
             default:
                 break;
         }
-
         return super.dispatchTouchEvent(ev);
     }
 
     private void handlerScroll(MotionEvent ev) {
+
         if (ev.getY() - mDownMotionY < 0) {
             if (getScrollY() <= mUpStairsViewHeight) {
                 scrollTo(0, (int) Math.min((mDownMotionY - ev.getY()) + mInitialOffSet, mUpStairsViewHeight));
@@ -305,4 +312,5 @@ public class FlingScrollDetailsLayout extends LinearLayout {
     protected void onScrollChanged(int l, int t, int oldl, int oldt) {
         super.onScrollChanged(l, t, oldl, oldt);
     }
+
 }
