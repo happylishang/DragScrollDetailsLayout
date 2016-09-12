@@ -10,6 +10,7 @@ import android.view.VelocityTracker;
 import android.view.View;
 import android.view.ViewConfiguration;
 import android.view.ViewGroup;
+import android.view.animation.DecelerateInterpolator;
 import android.widget.LinearLayout;
 import android.widget.Scroller;
 
@@ -96,7 +97,7 @@ public class FlingScrollDetailsLayout extends LinearLayout {
         mDuration = a.getInt(R.styleable.FlingScrollDetailsLayout_duration, DEFAULT_DURATION);
         mDefaultPanel = a.getInt(R.styleable.FlingScrollDetailsLayout_default_panel, 0);
         a.recycle();
-        mScroller = new Scroller(getContext());
+        mScroller = new Scroller(getContext(),new DecelerateInterpolator());
         mTouchSlop = ViewConfiguration.get(getContext()).getScaledTouchSlop();
         mMaxFlingVelocity = ViewConfiguration.get(getContext()).getScaledMaximumFlingVelocity();
         mMiniFlingVelocity = ViewConfiguration.get(getContext()).getScaledMinimumFlingVelocity();
@@ -223,7 +224,7 @@ public class FlingScrollDetailsLayout extends LinearLayout {
             return;
         }
         float mVelocity = mVelocityTracker.getYVelocity();
-        scrollY = mVelocity / 8;
+        scrollY = mVelocity / 7;
         if (scrollY > 0) scrollY = Math.min(getScrollY(), scrollY);
         else scrollY = Math.max(getScrollY() - mUpStairsViewHeight, scrollY);
         mScroller.startScroll(0, getScrollY(), 0, (int) -scrollY, mDuration);
