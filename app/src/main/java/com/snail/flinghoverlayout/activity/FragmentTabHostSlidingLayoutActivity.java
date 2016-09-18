@@ -1,4 +1,4 @@
-package com.snail.labaffinity.activity;
+package com.snail.flinghoverlayout.activity;
 
 import android.os.Bundle;
 import android.support.v4.app.FragmentTabHost;
@@ -7,7 +7,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TabHost;
 
-import com.snail.labaffinity.R;
+import com.snail.flinghoverlayout.R;
 
 public class FragmentTabHostSlidingLayoutActivity extends AppCompatActivity {
     FragmentTabHost fragmentTabHost;

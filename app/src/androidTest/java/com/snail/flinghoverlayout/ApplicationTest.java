@@ -1,4 +1,4 @@
-package com.snail.labaffinity;
+package com.snail.flinghoverlayout;
 
 import android.app.Application;
 import android.test.ApplicationTestCase;

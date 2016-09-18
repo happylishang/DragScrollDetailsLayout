@@ -1,4 +1,4 @@
-package com.snail.labaffinity.activity;
+package com.snail.flinghoverlayout.activity;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -10,7 +10,7 @@ import android.webkit.WebChromeClient;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
-import com.snail.labaffinity.R;
+import com.snail.flinghoverlayout.R;
 
 /**
  * Created by netease on 16-7-25.

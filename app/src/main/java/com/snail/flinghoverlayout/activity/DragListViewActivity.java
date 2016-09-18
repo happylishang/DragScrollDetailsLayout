@@ -1,4 +1,4 @@
-package com.snail.labaffinity.activity;
+package com.snail.flinghoverlayout.activity;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -9,7 +9,7 @@ import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 
-import com.snail.labaffinity.R;
+import com.snail.flinghoverlayout.R;
 
 /**
  * Author: hzlishang

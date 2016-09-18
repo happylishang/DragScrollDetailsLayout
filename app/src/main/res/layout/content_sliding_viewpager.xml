@@ -6,7 +6,7 @@
                 tools:context=".activity.MainActivity"
     >
 
-    <com.snail.labaffinity.view.FlingScrollDetailsLayout
+    <com.snail.flinghoverlayout.view.FlingScrollDetailsLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="#990099cc"
@@ -89,5 +89,5 @@
         </LinearLayout>
 
 
-    </com.snail.labaffinity.view.FlingScrollDetailsLayout>
+    </com.snail.flinghoverlayout.view.FlingScrollDetailsLayout>
 </RelativeLayout>

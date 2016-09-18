@@ -1,4 +1,4 @@
-package com.snail.labaffinity.view;
+package com.snail.flinghoverlayout.view;
 
 import android.content.Context;
 import android.content.res.TypedArray;
@@ -14,8 +14,8 @@ import android.view.animation.DecelerateInterpolator;
 import android.widget.LinearLayout;
 import android.widget.Scroller;
 
-import com.snail.labaffinity.R;
-import com.snail.labaffinity.adapter.SlideFragmentPagerAdapter;
+import com.snail.flinghoverlayout.R;
+import com.snail.flinghoverlayout.adapter.SlideFragmentPagerAdapter;
 
 /**
  * 1 ViewPager+TabLayout as content

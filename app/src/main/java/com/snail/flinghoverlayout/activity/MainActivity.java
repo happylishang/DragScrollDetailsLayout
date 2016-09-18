@@ -1,4 +1,4 @@
-package com.snail.labaffinity.activity;
+package com.snail.flinghoverlayout.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -7,8 +7,8 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import com.snail.labaffinity.R;
-import com.snail.labaffinity.service.BackGroundService;
+import com.snail.flinghoverlayout.R;
+import com.snail.flinghoverlayout.service.BackGroundService;
 
 import butterknife.ButterKnife;
 import butterknife.OnClick;

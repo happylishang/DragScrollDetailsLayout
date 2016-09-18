@@ -1,12 +1,12 @@
-package com.snail.labaffinity.activity;
+package com.snail.flinghoverlayout.activity;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.webkit.WebView;
 
-import com.snail.labaffinity.R;
-import com.snail.labaffinity.view.FlingScrollDetailsLayout;
+import com.snail.flinghoverlayout.R;
+import com.snail.flinghoverlayout.view.FlingScrollDetailsLayout;
 
 /**
  * Author: hzlishang

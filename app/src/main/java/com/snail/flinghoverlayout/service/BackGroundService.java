@@ -1,4 +1,4 @@
-package com.snail.labaffinity.service;
+package com.snail.flinghoverlayout.service;
 
 import android.app.Service;
 import android.content.Intent;

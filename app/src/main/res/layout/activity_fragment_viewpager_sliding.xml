@@ -11,7 +11,7 @@
         android:visibility="gone"
         android:text="second"/>
 
-    <com.snail.labaffinity.view.FlingScrollDetailsLayout
+    <com.snail.flinghoverlayout.view.FlingScrollDetailsLayout
         android:id="@+id/drag_content"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -87,14 +87,14 @@
 
             </android.support.design.widget.TabLayout>
 
-            <com.snail.labaffinity.view.NoneScrollViewPager
+            <com.snail.flinghoverlayout.view.NoneScrollViewPager
                 android:id="@+id/viewpager"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
 
-            </com.snail.labaffinity.view.NoneScrollViewPager>
+            </com.snail.flinghoverlayout.view.NoneScrollViewPager>
         </LinearLayout>
 
 
-    </com.snail.labaffinity.view.FlingScrollDetailsLayout>
+    </com.snail.flinghoverlayout.view.FlingScrollDetailsLayout>
 </LinearLayout>

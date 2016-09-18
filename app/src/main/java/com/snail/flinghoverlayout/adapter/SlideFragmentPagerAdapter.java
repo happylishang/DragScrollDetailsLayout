@@ -1,4 +1,4 @@
-package com.snail.labaffinity.adapter;
+package com.snail.flinghoverlayout.adapter;
 
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -6,8 +6,8 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.snail.labaffinity.activity.FragmentItem1;
-import com.snail.labaffinity.activity.FragmentItem2;
+import com.snail.flinghoverlayout.activity.FragmentItem1;
+import com.snail.flinghoverlayout.activity.FragmentItem2;
 
 /**
  * Author: hzlishang

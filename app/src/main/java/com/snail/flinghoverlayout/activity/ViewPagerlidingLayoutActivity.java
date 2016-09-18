@@ -1,4 +1,4 @@
-package com.snail.labaffinity.activity;
+package com.snail.flinghoverlayout.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -9,10 +9,10 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
 
-import com.snail.labaffinity.R;
-import com.snail.labaffinity.adapter.SlideFragmentPagerAdapter;
-import com.snail.labaffinity.service.BackGroundService;
-import com.snail.labaffinity.view.FlingScrollDetailsLayout;
+import com.snail.flinghoverlayout.R;
+import com.snail.flinghoverlayout.adapter.SlideFragmentPagerAdapter;
+import com.snail.flinghoverlayout.service.BackGroundService;
+import com.snail.flinghoverlayout.view.FlingScrollDetailsLayout;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;

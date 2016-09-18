@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-          package="com.snail.labaffinity">
+          package="com.snail.flinghoverlayout">
 
     <uses-permission android:name="android.permission.INTERNET"/>
     <application
@@ -10,7 +10,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".activity.MainActivity"
+            android:name="com.snail.flinghoverlayout.activity.MainActivity"
             android:label="@string/app_name"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
@@ -19,11 +19,11 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-        <activity android:name=".activity.FragmentTabHostSlidingLayoutActivity"/>
-        <activity android:name=".activity.ViewPagerlidingLayoutActivity"/>
-        <activity android:name=".activity.DragListViewActivity"/>
-        <activity android:name=".activity.DragWebViewActivity"/>
-        <activity android:name=".activity.DragWebViewListActivity"/>
-        <service android:name=".service.BackGroundService"/>
+        <activity android:name="com.snail.flinghoverlayout.activity.FragmentTabHostSlidingLayoutActivity"/>
+        <activity android:name="com.snail.flinghoverlayout.activity.ViewPagerlidingLayoutActivity"/>
+        <activity android:name="com.snail.flinghoverlayout.activity.DragListViewActivity"/>
+        <activity android:name="com.snail.flinghoverlayout.activity.DragWebViewActivity"/>
+        <activity android:name="com.snail.flinghoverlayout.activity.DragWebViewListActivity"/>
+        <service android:name="com.snail.flinghoverlayout.service.BackGroundService"/>
     </application>
 </manifest>
