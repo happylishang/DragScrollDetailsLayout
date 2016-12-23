@@ -31,8 +31,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
-
-           
                 <Button
                     android:layout_width="match_parent"
                     android:layout_height="100dp"
@@ -40,7 +38,6 @@
                     android:text="pull up to show more"/>
             </LinearLayout>
         </ScrollView>
-
         <WebView
             android:id="@+id/webview"
             android:layout_width="match_parent"
@@ -61,9 +58,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:orientation="vertical">
-                
-                <--content-->
-                
                  <TextView
                     android:layout_width="match_parent"
                     android:layout_height="100dp"
@@ -71,7 +65,6 @@
                     android:text="pull up to show more"/>
             </LinearLayout>
         </ScrollView>
-
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -108,7 +101,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:orientation="vertical">
-  
                  <TextView
                     android:layout_width="match_parent"
                     android:layout_height="100dp"
@@ -116,7 +108,6 @@
                     android:text="pull up to show more"/>
             </LinearLayout>
         </ScrollView>
-       
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
