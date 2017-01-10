@@ -233,35 +233,37 @@ public class DragScrollDetailsLayout extends LinearLayout {
 
         final int pHeight = mUpstairsView.getMeasuredHeight();
         final int threshold = (int) (pHeight * mPercent);
-        float scrollY = getScrollY();
+        float needFlingDistance = 0;
         if (CurrentTargetIndex.UPSTAIRS == mCurrentViewIndex) {
-            if (scrollY <= 0) {
-                scrollY = 0;
-            } else if (scrollY <= threshold) {
+            if (getScrollY() <= 0) {
+                needFlingDistance = 0;
+            } else if (getScrollY() <= threshold) {
                 if (needFlingToToggleView()) {
-                    scrollY = pHeight - getScrollY();
+                    needFlingDistance = pHeight - getScrollY();
                     mCurrentViewIndex = CurrentTargetIndex.DOWNSTAIRS;
                 } else {
-                    scrollY = -getScrollY();
+                    needFlingDistance = -getScrollY();
                 }
             } else {
-                scrollY = pHeight - getScrollY();
+                needFlingDistance = pHeight - getScrollY();
                 mCurrentViewIndex = CurrentTargetIndex.DOWNSTAIRS;
             }
         } else if (CurrentTargetIndex.DOWNSTAIRS == mCurrentViewIndex) {
-            if (pHeight + scrollY >= threshold) {
+            if (pHeight <= getScrollY()) {
+                needFlingDistance = 0;
+            } else if (pHeight - getScrollY() < threshold) {
                 if (needFlingToToggleView()) {
-                    scrollY = -getScrollY();
+                    needFlingDistance = -getScrollY();
                     mCurrentViewIndex = CurrentTargetIndex.UPSTAIRS;
                 } else {
-                    scrollY = pHeight - scrollY;
+                    needFlingDistance = pHeight - getScrollY();
                 }
             } else {
-                scrollY = -getScrollY();
+                needFlingDistance = -getScrollY();
                 mCurrentViewIndex = CurrentTargetIndex.UPSTAIRS;
             }
         }
-        mScroller.startScroll(0, getScrollY(), 0, (int) scrollY, mDuration);
+        mScroller.startScroll(0, getScrollY(), 0, (int) needFlingDistance, mDuration);
         if (mOnSlideDetailsListener != null) {
             mOnSlideDetailsListener.onStatueChanged(mCurrentViewIndex);
         }
