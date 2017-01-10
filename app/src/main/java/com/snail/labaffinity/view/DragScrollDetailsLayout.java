@@ -5,6 +5,7 @@ import android.content.res.TypedArray;
 import android.support.v4.view.ViewCompat;
 import android.support.v4.view.ViewPager;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.VelocityTracker;
 import android.view.View;
@@ -40,7 +41,7 @@ public class DragScrollDetailsLayout extends LinearLayout {
     }
 
     private static final float DEFAULT_PERCENT = 0.3f;
-    private static final int DEFAULT_DURATION = 400;
+    private static final int DEFAULT_DURATION = 300;
 
 
     private int mMaxFlingVelocity;
@@ -115,6 +116,11 @@ public class DragScrollDetailsLayout extends LinearLayout {
      */
     @Override
     public boolean dispatchTouchEvent(MotionEvent ev) {
+        if (!mScroller.isFinished()) {
+            resetDownPosition(ev);
+            return true;
+        }
+        Log.v("lishang", "" + getScrollY());
         requestDisallowInterceptTouchEvent(false);
         return super.dispatchTouchEvent(ev);
     }
@@ -130,16 +136,7 @@ public class DragScrollDetailsLayout extends LinearLayout {
     public boolean onInterceptTouchEvent(MotionEvent ev) {
         switch (ev.getActionMasked()) {
             case MotionEvent.ACTION_DOWN:
-                mDownMotionX = ev.getX();
-                mDownMotionY = ev.getY();
-                if (mVelocityTracker == null) {
-                    mVelocityTracker = VelocityTracker.obtain();
-                }
-                if (!mScroller.isFinished()) {
-                    mScroller.abortAnimation();
-                }
-                mVelocityTracker.clear();
-                mChildHasScrolled = false;
+                resetDownPosition(ev);
                 break;
             case MotionEvent.ACTION_MOVE:
                 adjustValidDownPoint(ev);
@@ -150,6 +147,16 @@ public class DragScrollDetailsLayout extends LinearLayout {
         return false;
     }
 
+    private void resetDownPosition(MotionEvent ev) {
+        mDownMotionX = ev.getX();
+        mDownMotionY = ev.getY();
+        if (mVelocityTracker == null) {
+            mVelocityTracker = VelocityTracker.obtain();
+        }
+        mVelocityTracker.clear();
+        mChildHasScrolled = false;
+        mInitialInterceptY = (int) ev.getY();
+    }
 
     @Override
     public boolean onTouchEvent(MotionEvent ev) {
