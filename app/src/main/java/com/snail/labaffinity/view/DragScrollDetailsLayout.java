@@ -87,7 +87,7 @@ public class DragScrollDetailsLayout extends LinearLayout {
         mDuration = a.getInt(R.styleable.DragScrollDetailsLayout_duration, DEFAULT_DURATION);
         mDefaultPanel = a.getInt(R.styleable.DragScrollDetailsLayout_default_panel, 0);
         a.recycle();
-        mScroller = new Scroller(getContext(),new DecelerateInterpolator());
+        mScroller = new Scroller(getContext(), new DecelerateInterpolator());
         mTouchSlop = ViewConfiguration.get(getContext()).getScaledTouchSlop();
         mMaxFlingVelocity = ViewConfiguration.get(getContext()).getScaledMaximumFlingVelocity();
         mMiniFlingVelocity = ViewConfiguration.get(getContext()).getScaledMinimumFlingVelocity();
@@ -135,8 +135,11 @@ public class DragScrollDetailsLayout extends LinearLayout {
                 if (mVelocityTracker == null) {
                     mVelocityTracker = VelocityTracker.obtain();
                 }
+                if (!mScroller.isFinished()) {
+                    mScroller.abortAnimation();
+                }
                 mVelocityTracker.clear();
-                mChildHasScrolled=false;
+                mChildHasScrolled = false;
                 break;
             case MotionEvent.ACTION_MOVE:
                 adjustValidDownPoint(ev);
@@ -165,11 +168,10 @@ public class DragScrollDetailsLayout extends LinearLayout {
         return true;
     }
 
-
     private boolean checkCanInterceptTouchEvent(MotionEvent ev) {
         final float xDiff = ev.getX() - mDownMotionX;
         final float yDiff = ev.getY() - mDownMotionY;
-        if (!canChildScrollVertically((int) yDiff,ev)) {
+        if (!canChildScrollVertically((int) yDiff, ev)) {
             mInitialInterceptY = (int) ev.getY();
             if (Math.abs(yDiff) > mTouchSlop && Math.abs(yDiff) >= Math.abs(xDiff)
                     && !(mCurrentViewIndex == CurrentTargetIndex.UPSTAIRS && yDiff > 0
@@ -181,7 +183,6 @@ public class DragScrollDetailsLayout extends LinearLayout {
     }
 
 
-
     private void adjustValidDownPoint(MotionEvent event) {
         if (mCurrentViewIndex == CurrentTargetIndex.UPSTAIRS && event.getY() > mDownMotionY
                 || mCurrentViewIndex == CurrentTargetIndex.DOWNSTAIRS && event.getY() < mDownMotionY) {
@@ -190,20 +191,31 @@ public class DragScrollDetailsLayout extends LinearLayout {
         }
     }
 
+    /**
+     * 拦截之后的拖动
+     */
     private void scroll(MotionEvent event) {
         if (mCurrentViewIndex == CurrentTargetIndex.UPSTAIRS) {
-            if (getScrollY() <= 0 && event.getY() > mInitialInterceptY) {
+            if (getScrollY() <= 0 && event.getY() >= mInitialInterceptY) {
                 mInitialInterceptY = (int) event.getY();
             }
-            scrollTo(0, (int) (mInitialInterceptY - event.getY()));
+            int distance = mInitialInterceptY - event.getY() >= 0 ? (int) (mInitialInterceptY - event.getY()) : 0;
+            scrollTo(0, distance);
         } else {
-            if (getScrollY() >= mUpstairsView.getMeasuredHeight() && event.getY() < mInitialInterceptY) {
+            if (getScrollY() >= mUpstairsView.getMeasuredHeight() && event.getY() <= mInitialInterceptY) {
                 mInitialInterceptY = (int) event.getY();
             }
-            scrollTo(0, (int) (mInitialInterceptY - event.getY() + mUpstairsView.getMeasuredHeight()));
+            int distance = event.getY() <= mInitialInterceptY ? mUpstairsView.getMeasuredHeight()
+                    : (int) (mInitialInterceptY - event.getY() + mUpstairsView.getMeasuredHeight());
+            scrollTo(0, distance);
         }
         mVelocityTracker.addMovement(event);
     }
+
+
+    /**
+     * 清理VelocityTracker
+     */
 
     private void recycleVelocityTracker() {
         if (mVelocityTracker != null) {
@@ -229,20 +241,22 @@ public class DragScrollDetailsLayout extends LinearLayout {
                 if (needFlingToToggleView()) {
                     scrollY = pHeight - getScrollY();
                     mCurrentViewIndex = CurrentTargetIndex.DOWNSTAIRS;
-                } else
+                } else {
                     scrollY = -getScrollY();
+                }
             } else {
                 scrollY = pHeight - getScrollY();
                 mCurrentViewIndex = CurrentTargetIndex.DOWNSTAIRS;
             }
         } else if (CurrentTargetIndex.DOWNSTAIRS == mCurrentViewIndex) {
-            if (pHeight - scrollY <= threshold) {
+            if (pHeight + scrollY >= threshold) {
                 if (needFlingToToggleView()) {
                     scrollY = -getScrollY();
                     mCurrentViewIndex = CurrentTargetIndex.UPSTAIRS;
-                } else
+                } else {
                     scrollY = pHeight - scrollY;
-            } else if (scrollY < pHeight) {
+                }
+            } else {
                 scrollY = -getScrollY();
                 mCurrentViewIndex = CurrentTargetIndex.UPSTAIRS;
             }
@@ -293,7 +307,7 @@ public class DragScrollDetailsLayout extends LinearLayout {
         setMeasuredDimension(getMeasuredWidth(), getMeasuredHeight());
     }
 
-    protected boolean canChildScrollVertically(int offSet,MotionEvent ev) {
+    protected boolean canChildScrollVertically(int offSet, MotionEvent ev) {
         mCurrentTargetView = getCurrentTargetView();
         return canScrollVertically(mCurrentTargetView, -offSet, ev);
     }
@@ -342,7 +356,7 @@ public class DragScrollDetailsLayout extends LinearLayout {
         return false;
     }
 
-    private boolean canViewPagerScrollVertically(ViewPager viewPager, int offset,MotionEvent ev) {
+    private boolean canViewPagerScrollVertically(ViewPager viewPager, int offset, MotionEvent ev) {
         View showView = ((SlideFragmentPagerAdapter) viewPager.getAdapter()).getPrimaryItem();
         return showView != null && canScrollVertically(showView, offset, ev);
     }
@@ -351,6 +365,5 @@ public class DragScrollDetailsLayout extends LinearLayout {
     protected void onScrollChanged(int l, int t, int oldl, int oldt) {
         super.onScrollChanged(l, t, oldl, oldt);
     }
-
 
 }
