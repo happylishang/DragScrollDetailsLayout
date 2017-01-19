@@ -7,6 +7,7 @@
     tools:showIn="@layout/activity_main">
 
     <com.snail.labaffinity.view.DragScrollDetailsLayout
+        android:id="@+id/detail"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 

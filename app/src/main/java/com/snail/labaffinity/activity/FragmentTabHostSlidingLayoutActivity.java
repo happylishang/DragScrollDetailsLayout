@@ -8,6 +8,11 @@ import android.view.MenuItem;
 import android.widget.TabHost;
 
 import com.snail.labaffinity.R;
+import com.snail.labaffinity.view.DragScrollDetailsLayout;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 public class FragmentTabHostSlidingLayoutActivity extends AppCompatActivity {
     FragmentTabHost fragmentTabHost;
@@ -19,6 +24,7 @@ public class FragmentTabHostSlidingLayoutActivity extends AppCompatActivity {
         setContentView(R.layout.activity_fragment_tabhost_sliding);
         fragmentTabHost = (FragmentTabHost) findViewById(R.id.tablayout);
         fragmentTabHost.setup(this, getSupportFragmentManager(), R.id.content);
+        ButterKnife.bind(this);
         for(int i=0;i<mHomeFragments.length;i++){
             TabHost.TabSpec tabSpec = fragmentTabHost.newTabSpec("" + i).setIndicator(""+i);
             fragmentTabHost.addTab(tabSpec, mHomeFragments[i], null);
@@ -45,5 +51,13 @@ public class FragmentTabHostSlidingLayoutActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @BindView(R.id.detail)
+    DragScrollDetailsLayout mDragScrollDetailsLayout;
+
+    @OnClick(R.id.up)
+    void up() {
+        mDragScrollDetailsLayout.scrollToTop();
     }
 }

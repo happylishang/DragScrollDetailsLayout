@@ -375,4 +375,14 @@ public class DragScrollDetailsLayout extends LinearLayout {
         super.onScrollChanged(l, t, oldl, oldt);
     }
 
+    public void scrollToTop() {
+        if (mCurrentViewIndex == CurrentTargetIndex.DOWNSTAIRS) {
+            mScroller.startScroll(0, getScrollY(), 0, -getScrollY(), mDuration);
+            mCurrentViewIndex=CurrentTargetIndex.UPSTAIRS;
+            postInvalidate();
+        }
+        if (mOnSlideDetailsListener != null) {
+            mOnSlideDetailsListener.onStatueChanged(mCurrentViewIndex);
+        }
+    }
 }

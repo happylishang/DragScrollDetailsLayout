@@ -8,5 +8,5 @@ package com.snail.labaffinity.service;
  */
 
 public interface Constant {
-    String URL="https://gold.xitu.io/";
+    String URL="http://www.jianshu.com/u/3b1099674c2c";
 }

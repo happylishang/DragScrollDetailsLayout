@@ -10,4 +10,15 @@
 
     <include layout="@layout/content_sliding_fragmenttabhost"/>
 
+    <Button
+        android:id="@+id/up"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|right"
+        android:layout_marginBottom="15dp"
+        android:layout_marginRight="15dp"
+        android:background="@color/colorAccent"
+        android:text="返回顶部"/>
+
+
 </android.support.design.widget.CoordinatorLayout>
