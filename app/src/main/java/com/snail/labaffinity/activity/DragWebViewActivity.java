@@ -8,6 +8,7 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
 import com.snail.labaffinity.R;
+import com.snail.labaffinity.service.Constant;
 
 /**
  * Author: hzlishang
@@ -27,6 +28,6 @@ public class DragWebViewActivity extends AppCompatActivity {
         webView.setWebViewClient(new WebViewClient());
         webView.setWebChromeClient(new WebChromeClient());
 
-        webView.loadUrl("http://happylishang.github.io/");
+        webView.loadUrl(Constant.URL);
     }
 }

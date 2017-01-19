@@ -8,6 +8,7 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
 import com.snail.labaffinity.R;
+import com.snail.labaffinity.service.Constant;
 import com.snail.labaffinity.view.DragScrollDetailsLayout;
 
 /**
@@ -27,7 +28,7 @@ public class DragWebViewListActivity extends AppCompatActivity {
 
         webView.setWebViewClient(new WebViewClient());
         webView.setWebChromeClient(new WebChromeClient());
-        webView.loadUrl("http://happylishang.github.io/");
+        webView.loadUrl(Constant.URL);
         DragScrollDetailsLayout md= (DragScrollDetailsLayout) findViewById(R.id.drag_lv);
         md.setPercent(0);
     }

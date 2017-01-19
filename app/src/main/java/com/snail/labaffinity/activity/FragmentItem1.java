@@ -11,6 +11,7 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
 import com.snail.labaffinity.R;
+import com.snail.labaffinity.service.Constant;
 
 /**
  * Created by netease on 16-7-25.
@@ -30,7 +31,7 @@ public class FragmentItem1 extends Fragment {
             webView.getSettings().setJavaScriptEnabled(true);
             webView.setWebViewClient(new WebViewClient());
             webView.setWebChromeClient(new WebChromeClient());
-            webView.loadUrl("http://happylishang.github.io/");
+            webView.loadUrl(Constant.URL);
         } else {
             ViewGroup v = ((ViewGroup) (rootView.getParent()));
             if (v != null) {
