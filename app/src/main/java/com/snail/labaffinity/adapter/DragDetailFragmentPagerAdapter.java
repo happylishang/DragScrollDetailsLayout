@@ -2,11 +2,9 @@ package com.snail.labaffinity.adapter;
 
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentPagerAdapter;
 import android.view.View;
 import android.view.ViewGroup;
-
-import com.snail.labaffinity.activity.FragmentItem1;
-import com.snail.labaffinity.activity.FragmentItem2;
 
 /**
  * Author: hzlishang
@@ -14,24 +12,13 @@ import com.snail.labaffinity.activity.FragmentItem2;
  * Des:
  * version:
  */
-public class SlideFragmentPagerAdapter extends DragDetailFragmentPagerAdapter {
-    public SlideFragmentPagerAdapter(FragmentManager fm) {
-        super(fm);
-    }
-
-    @Override
-    public Fragment getItem(int position) {
-        if (position % 2 == 0)
-            return new FragmentItem2();
-        return new FragmentItem1();
-    }
-
-    @Override
-    public int getCount() {
-        return 3;
-    }
+public abstract class DragDetailFragmentPagerAdapter extends FragmentPagerAdapter {
 
     private View mCurrentView;
+
+    public DragDetailFragmentPagerAdapter(FragmentManager fm) {
+        super(fm);
+    }
 
     @Override
     public void setPrimaryItem(ViewGroup container, int position, Object object) {
@@ -42,13 +29,7 @@ public class SlideFragmentPagerAdapter extends DragDetailFragmentPagerAdapter {
             mCurrentView = fragment.getView();
         }
     }
-
     public View getPrimaryItem() {
         return mCurrentView;
-    }
-
-    @Override
-    public CharSequence getPageTitle(int position) {
-        return "Tab"+position;
     }
 }
