@@ -16,7 +16,7 @@ import android.widget.LinearLayout;
 import android.widget.Scroller;
 
 import com.snail.labaffinity.R;
-import com.snail.labaffinity.adapter.SlideFragmentPagerAdapter;
+import com.snail.labaffinity.adapter.DragDetailFragmentPagerAdapter;
 
 /**
  * 1 ViewPager+TabLayout as content
@@ -366,8 +366,14 @@ public class DragScrollDetailsLayout extends LinearLayout {
     }
 
     private boolean canViewPagerScrollVertically(ViewPager viewPager, int offset, MotionEvent ev) {
-        View showView = ((SlideFragmentPagerAdapter) viewPager.getAdapter()).getPrimaryItem();
-        return showView != null && canScrollVertically(showView, offset, ev);
+
+        if(viewPager.getAdapter() instanceof DragDetailFragmentPagerAdapter){
+            View showView = ((DragDetailFragmentPagerAdapter) viewPager.getAdapter()).getPrimaryItem();
+            return showView != null && canScrollVertically(showView, offset, ev);
+        }else {
+            return false;
+        }
+
     }
 
     @Override
