@@ -13,7 +13,9 @@
 <img src="https://github.com/happylishang/DragScrollDetailsLayout/blob/master/video/scrollview%2Blistview.gif" width=300></img> 
 <img src="https://github.com/happylishang/DragScrollDetailsLayout/blob/master/video/scrollview%2Bwebview.gif" width=300></img>
 
-### 使用说明  FragmentPagerAdapter请继承DragDetailFragmentPagerAdapter
+### 使用说明  
+
+**FragmentPagerAdapter请继承DragDetailFragmentPagerAdapter**
  
 #### ScrollView+WebView
 
