@@ -1,10 +1,13 @@
 # DragScrollDetailsLayout
 
+### 使用时候注意FragmentPagerAdapter 继承DragDetailFragmentPagerAdapter
+
 模仿淘宝、京东、蘑菇街商品详情页，可嵌套ListView、WebView、ViewPager、FragmentTabhost等
 
 ### 1、支持ScrollView+Webview 
 ### 2、支持scollView+viewpager(内不可以是listview或者webbiew)
 ### 3、支持支持ScrollView+listview
+
 
 等等
 
