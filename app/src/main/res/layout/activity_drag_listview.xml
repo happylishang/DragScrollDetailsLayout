@@ -4,7 +4,7 @@
               android:layout_height="match_parent"
               android:orientation="vertical">
 
-    <com.snail.labaffinity.view.DragScrollDetailsLayout
+    <com.snail.dragscrolldetailslayout.view.DragScrollDetailsLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="#990099cc"
@@ -69,5 +69,5 @@
             android:id="@+id/listview"
             android:layout_width="match_parent"
             android:layout_height="match_parent"/>
-    </com.snail.labaffinity.view.DragScrollDetailsLayout>
+    </com.snail.dragscrolldetailslayout.view.DragScrollDetailsLayout>
 </LinearLayout>
